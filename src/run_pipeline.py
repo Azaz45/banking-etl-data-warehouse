@@ -1,9 +1,21 @@
 
+import logging
 import subprocess
 import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+LOG_DIR = BASE_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_DIR / "pipeline.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
 
 scripts = [
     "src/generate_data.py",
@@ -14,18 +26,37 @@ scripts = [
     "src/validate_database.py",
 ]
 
+logging.info("Banking ETL pipeline started")
+
 for script in scripts:
-    print(f"\n{'=' * 45}")
-    print(f"Running: {script}")
-    print("=" * 45)
+    logging.info("Running %s", script)
 
-    result = subprocess.run(
-        [sys.executable, str(BASE_DIR / script)],
-        cwd=BASE_DIR
-    )
+    try:
+        result = subprocess.run(
+            [sys.executable, str(BASE_DIR / script)],
+            cwd=BASE_DIR,
+            check=True,
+            capture_output=True,
+            text=True
+        )
 
-    if result.returncode != 0:
-        print(f"Pipeline failed at: {script}")
-        sys.exit(result.returncode)
+        if result.stdout:
+            logging.info(result.stdout.strip())
 
-print("\nBanking ETL pipeline completed successfully!")
+        if result.stderr:
+            logging.warning(result.stderr.strip())
+
+        logging.info("%s completed successfully", script)
+
+    except subprocess.CalledProcessError as error:
+        logging.error("Pipeline failed at %s", script)
+
+        if error.stdout:
+            logging.info(error.stdout.strip())
+
+        if error.stderr:
+            logging.error(error.stderr.strip())
+
+        sys.exit(error.returncode)
+
+logging.info("Banking ETL pipeline completed successfully")

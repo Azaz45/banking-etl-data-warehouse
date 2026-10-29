@@ -1,0 +1,75 @@
+2026-10-29 11:54:59,539 | INFO | Banking ETL pipeline started
+2026-10-29 11:54:59,541 | INFO | Running src/generate_data.py
+2026-10-29 11:55:32,029 | INFO | ====================================
+Banking Data Generation Completed
+====================================
+Customers: 5,000
+Accounts: 8,000
+Transactions: 50,100
+
+Files created:
+C:\Users\azaza\OneDrive\Desktop\BANKING-ETL-DATA-WAREHOUSE\data\raw\customers.csv
+C:\Users\azaza\OneDrive\Desktop\BANKING-ETL-DATA-WAREHOUSE\data\raw\accounts.csv
+C:\Users\azaza\OneDrive\Desktop\BANKING-ETL-DATA-WAREHOUSE\data\raw\transactions.csv
+2026-10-29 11:55:32,029 | INFO | src/generate_data.py completed successfully
+2026-10-29 11:55:32,029 | INFO | Running src/check_data.py
+2026-10-29 11:55:33,586 | INFO | CUSTOMERS: (5000, 6)
+ACCOUNTS: (8000, 6)
+TRANSACTIONS: (50100, 10)
+
+Transaction sample:
+   transaction_id transaction_date  ...   status  branch_id
+0               1       2025-05-05  ...  Success         95
+1               2       2026-07-09  ...  Success         84
+2               3       2025-06-11  ...  Success         52
+3               4       2025-12-26  ...  Success         87
+4               5       2025-02-17  ...  Success         72
+
+[5 rows x 10 columns]
+
+Missing values:
+transaction_id       0
+transaction_date     0
+customer_id         50
+account_id           0
+transaction_type     0
+amount               0
+currency             0
+channel              0
+status               0
+branch_id            0
+dtype: int64
+
+Duplicate transaction IDs:
+100
+
+Negative transaction amounts:
+30
+2026-10-29 11:55:33,587 | INFO | src/check_data.py completed successfully
+2026-10-29 11:55:33,587 | INFO | Running src/clean_data.py
+2026-10-29 11:55:35,163 | INFO | Before cleaning: (50100, 10)
+After cleaning: (49920, 10)
+Remaining duplicates: 0
+Remaining missing values: 0
+Cleaned file saved to: C:\Users\azaza\OneDrive\Desktop\BANKING-ETL-DATA-WAREHOUSE\data\processed\transactions_cleaned.csv
+2026-10-29 11:55:35,171 | INFO | src/clean_data.py completed successfully
+2026-10-29 11:55:35,172 | INFO | Running src/clean_master_data.py
+2026-10-29 11:55:36,671 | INFO | Customers cleaned: 5000
+Accounts cleaned: 8000
+Master data cleaning completed!
+2026-10-29 11:55:36,671 | INFO | src/clean_master_data.py completed successfully
+2026-10-29 11:55:36,671 | INFO | Running src/load_database.py
+2026-10-29 11:55:38,322 | INFO | customers: 5000 rows loaded
+accounts: 8000 rows loaded
+transactions: 49920 rows loaded
+Database loading completed!
+2026-10-29 11:55:38,322 | INFO | src/load_database.py completed successfully
+2026-10-29 11:55:38,322 | INFO | Running src/validate_database.py
+2026-10-29 11:55:38,546 | INFO | Customers: 5000
+Accounts: 8000
+Transactions: 49920
+Duplicate transaction IDs: 0
+Invalid transaction amounts: 0
+Missing customer IDs in transactions: 0
+2026-10-29 11:55:38,548 | INFO | src/validate_database.py completed successfully
+2026-10-29 11:55:38,548 | INFO | Banking ETL pipeline completed successfully
