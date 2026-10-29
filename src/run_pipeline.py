@@ -23,7 +23,8 @@ scripts = [
     "src/clean_data.py",
     "src/clean_master_data.py",
     "src/load_database.py",
-    "src/validate_database.py",
+    "src/validate_database.py"
+    "src/incremental_etl.py",,
 ]
 
 logging.info("Banking ETL pipeline started")
